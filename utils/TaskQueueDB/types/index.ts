@@ -1,0 +1,4 @@
+export enum EventTypesEnum {
+  UPDATE_QUEUE = "UPDATE_QUEUE",
+  UPDATE_QUEUE_STATE = "UPDATE_QUEUE_STATE",
+}
