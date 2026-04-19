@@ -2,16 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>com.aguilasseguridad.asmobileapp.backgroundTask1</string>
-	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>AguilasSeguridad</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,92 +17,37 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>myapp</string>
-				<string>com.aguilasseguridad.asmobileapp</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NFCReaderUsageDescription</key>
-	<string>We need to use NFC</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>12.0</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Necesitamos acceso a la cámara para poder leer los NFC y puedas sacar fotografías de los eventos ocurridos en la instalación.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Se requiere acceso a la ubicación en todo momento, para poder registrar la ubicación de los eventos ocurridos en la instalación.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Se requiere acceso a la ubicación en segundo plano, para poder registrar la ubicación de los eventos ocurridos en la instalación, poder dar seguimiento a la ronda y poder validar la ubicación de los eventos.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Se requiere acceso a la ubicación para poder registrar la ubicación de los eventos ocurridos en la instalación, poder dar seguimiento a la ronda y poder validar la ubicación de los eventos.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Se requiere acceso al micrófono para poder grabar los videos de los eventos ocurridos en la instalación.</string>
-	<key>NSNFCReaderUsageDescription</key>
-	<string>Se requiere acceso a la lectura de NFC para poder leer los códigos de la ronda y validar que estés en la zona de la instalación.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>location</string>
-		<string>processing</string>
-		<string>remote-notification</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>
 	</array>
-	<key>UIRequiresFullScreen</key>
-	<false/>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleDefault</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
-	<key>UIUserInterfaceStyle</key>
-	<string>Automatic</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>com.apple.developer.nfc.readersession.felica.systemcodes</key>
-	<array>
-		<string>8008</string>
-	</array>
-	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-	<array>
-		<string>A0000002471001</string>
-	</array>
 </dict>
 </plist>

@@ -25,7 +25,15 @@ export default {
             minSdkVersion: 26,
             compileSdkVersion: 35,
             targetSdkVersion: 35,
+            buildToolsVersion: "35.0.0",
+            androidGradlePluginVersion: "8.3.2",
+            ndkVersion: "27.1.12297006",
             enableProguardInRelease: true,
+            packagingOptions: {
+              jniLibs: {
+                useLegacyPackaging: false,
+              },
+            },
           },
         },
       ],
@@ -58,6 +66,7 @@ export default {
           "Esta app utiliza la cámara para validar los codigos qr.",
         UIBackgroundModes: ["location", "fetch", "remote-notification"],
       },
+      googleServicesFile: process.env.GOOGLE_SERVICES_PLIST ?? "./ios/GoogleService-Info.plist",
       bundleIdentifier: packageName,
       supportsTablet: true,
     },
@@ -81,7 +90,7 @@ export default {
         "FOREGROUND_SERVICE_DATA_SYNC",
         "com.google.android.gms.permission.AD_ID",
       ],
-      versionCode: 29,
+      versionCode: 30,
     },
     web: {
       bundler: "metro",
