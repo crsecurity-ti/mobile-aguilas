@@ -68,7 +68,7 @@ export const processQueue = async () => {
     taskIcon: { name: "ic_launcher", type: "mipmap" },
     taskName: "DataSync",
     taskTitle: "Sincronización en curso",
-    foregroundServiceType: "dataSync",
+    foregroundServiceType: ["dataSync"],
   };
 
   BackgroundService.on("expiration", async () => {

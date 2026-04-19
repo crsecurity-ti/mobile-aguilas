@@ -1,5 +1,10 @@
 import "dotenv/config";
 
+const isProduction = process.env.APP_ENV === "production";
+const packageName = isProduction
+  ? "com.aguilasseguridad.asmobileapp"
+  : "com.aguilasseguridadqa1.asmobileapp";
+
 export default {
   expo: {
     name: "AguilasSeguridad",
@@ -12,13 +17,15 @@ export default {
     plugins: [
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
+      "./plugins/withBackgroundActions.js",
       [
         "expo-build-properties",
         {
           android: {
             minSdkVersion: 26,
             compileSdkVersion: 35,
-            targetSdkVersion: 34,
+            targetSdkVersion: 35,
+            enableProguardInRelease: true,
           },
         },
       ],
@@ -51,7 +58,7 @@ export default {
           "Esta app utiliza la cámara para validar los codigos qr.",
         UIBackgroundModes: ["location", "fetch", "remote-notification"],
       },
-      bundleIdentifier: "com.aguilasseguridadqa1.asmobileapp",
+      bundleIdentifier: packageName,
       supportsTablet: true,
     },
     android: {
@@ -65,14 +72,16 @@ export default {
           apiKey: "AIzaSyC_zKTBKfT5D0zHOLFeq-WIMfxsNCcCbXI",
         },
       },
-      package: "com.aguilasseguridadqa1.asmobileapp",
+      package: packageName,
       permissions: [
         "CAMERA",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE_DATA_SYNC",
+        "com.google.android.gms.permission.AD_ID",
       ],
-      versionCode: 13,
+      versionCode: 29,
     },
     web: {
       bundler: "metro",
