@@ -1,4 +1,4 @@
-import "react-native-get-random-values";
+﻿import "react-native-get-random-values";
 
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -114,7 +114,7 @@ const EventView = () => {
         description: data.description,
         guardUuid: user?.uuid ?? "",
       });
-      typeEvent = "guard";
+      typeEvent = "personal";
     }
 
     for (let index = 0; index < images.length; index++) {

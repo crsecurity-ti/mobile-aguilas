@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+﻿import { format } from "date-fns";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Text } from "react-native";
@@ -7,7 +7,7 @@ import TotalGuardPercentageCard from "./TotalGuardPercentageCard";
 import TotalRoundSupervisorPercentageCard from "./TotalRoundSupervisorPercentageCard";
 import SimpleCardDS from "../../../../components/SimpleCardDS";
 
-const RoundsCard = ({ role }: { role: "guard" | "supervisor" }) => {
+const RoundsCard = ({ role }: { role: "personal" | "supervisor" }) => {
   const router = useRouter();
 
   return (
@@ -26,7 +26,7 @@ const RoundsCard = ({ role }: { role: "guard" | "supervisor" }) => {
           <Text className="text-sm text-violet-500 font-semibold pb-2">
             Rondas del dia {format(new Date(), "yyyy-MM-dd")}.
           </Text>
-          {role === "guard" ? (
+          {role === "personal" ? (
             <TotalGuardPercentageCard />
           ) : (
             <TotalRoundSupervisorPercentageCard />

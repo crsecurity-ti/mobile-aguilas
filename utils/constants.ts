@@ -1,4 +1,4 @@
-import type { ScaledSize } from "react-native";
+﻿import type { ScaledSize } from "react-native";
 import { Dimensions } from "react-native";
 
 export const listOfColors = [
@@ -36,25 +36,25 @@ export const routes = [
     name: "home",
     drawerLabel: "Inicio",
     title: "Aguilas Seguridad",
-    roles: ["guard", "supervisor", "admin"],
+    roles: ["personal", "supervisor", "admin"],
   },
   {
     name: "profile",
     drawerLabel: "Mi Perfil",
     title: "Mi Perfil",
-    roles: ["guard", "supervisor", "admin"],
+    roles: ["personal", "supervisor", "admin"],
   },
   {
     name: "rounds",
     drawerLabel: "Mis Rondas",
     title: "Mis Rondas",
-    roles: ["guard", "supervisor"],
+    roles: ["personal", "supervisor"],
   },
   {
     name: "events",
     drawerLabel: "Mis Eventos",
     title: "Mis Eventos",
-    roles: ["guard"],
+    roles: ["personal"],
   },
   {
     name: "new-event",
@@ -66,7 +66,7 @@ export const routes = [
     name: "permissions",
     drawerLabel: "Revisar Permisos",
     title: "Revisar Permisos",
-    roles: ["guard", "supervisor", "admin"],
+    roles: ["personal", "supervisor", "admin"],
   },
   {
     name: "details",
@@ -94,8 +94,8 @@ export const routes = [
   },
   {
     name: "list-contractors",
-    drawerLabel: "Guardias: Listado de Instalaciones",
-    title: "Guardias: Listado de Instalaciones",
+    drawerLabel: "Personal: Listado de Instalaciones",
+    title: "Personal: Listado de Instalaciones",
     roles: ["admin"],
   },
   {
@@ -132,7 +132,7 @@ export const routes = [
     name: "access",
     drawerLabel: "Ingreso de Personal Externo",
     title: "Ingreso de Personal Externo",
-    roles: ["guard"],
+    roles: ["personal"],
   },
   {
     name: "access-historial",
@@ -162,19 +162,19 @@ export const routes = [
     name: "access-worker",
     drawerLabel: "Control de Acceso Interno",
     title: "Control de Acceso Interno",
-    roles: ["guard"],
+    roles: ["personal"],
   },
   {
     name: "list-documents",
     drawerLabel: "Listado de documentos",
     title: "Firmar Documentos",
-    roles: ["guard", "supervisor"],
+    roles: ["personal", "supervisor"],
   },
   {
     name: "qr-code-list",
     drawerLabel: "Listado Códigos QR",
     title: "Listado Códigos QR",
-    roles: ["guard", "supervisor"],
+    roles: ["personal", "supervisor"],
   },
   {
     name: "validate-qr-code",
@@ -186,7 +186,7 @@ export const routes = [
     name: "todo-list",
     drawerLabel: "Listado de Tareas",
     title: "Listado de Tareas",
-    roles: ["guard", "supervisor"],
+    roles: ["personal", "supervisor"],
   },
   {
     name: "todo-simple",
@@ -198,13 +198,13 @@ export const routes = [
     name: "sync",
     drawerLabel: "Sincronizaciones",
     title: "Sincronizaciones",
-    roles: ["guard", "supervisor"],
+    roles: ["personal", "supervisor"],
   },
   {
     name: "camera-face-recognition",
     drawerLabel: "Reconocimiento Facial",
     title: "Reconocimiento Facial",
-    roles: ["guard"],
+    roles: ["personal"],
   },
 ];
 

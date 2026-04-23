@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+﻿import { Text } from "react-native";
 
 import RoundList from "./RoundList";
 import RoundListSupervisor from "./supervisor/RoundListSupervisor";
@@ -7,7 +7,7 @@ import { useUserStore } from "../../../store/auth";
 const RoundByRole = () => {
   const user = useUserStore((state) => state.user);
 
-  if (user?.userInformation.role === "guard") {
+  if (user?.userInformation.role === "personal") {
     return <RoundList />;
   }
 

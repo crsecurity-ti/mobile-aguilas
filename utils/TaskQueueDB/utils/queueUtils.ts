@@ -1,4 +1,4 @@
-import NetInfo from "@react-native-community/netinfo";
+﻿import NetInfo from "@react-native-community/netinfo";
 import { Alert } from "react-native";
 import BackgroundService from "react-native-background-actions";
 import RNFS from "react-native-fs";
@@ -120,7 +120,7 @@ const handleTaskUpload = async (task: ImagesUpload) => {
       });
     }
 
-    if (task.typeEvent === "guard") {
+    if (task.typeEvent === "personal") {
       await updateEventImagesInFirestore({
         eventUuid: task.eventUuid,
         images: [uploadResult.downloadUrl],
@@ -128,7 +128,7 @@ const handleTaskUpload = async (task: ImagesUpload) => {
       });
     }
 
-    if (task.typeEvent !== "guard" && task.typeEvent !== "task") {
+    if (task.typeEvent !== "personal" && task.typeEvent !== "task") {
       await updateEventSupervisorImagesInFirestore({
         eventUuid: task.eventUuid,
         images: [uploadResult.downloadUrl],

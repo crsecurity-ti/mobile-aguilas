@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+﻿import React, { useEffect } from "react";
 import { Text } from "react-native";
 
 import MainAdmin from "./MainAdmin";
@@ -9,7 +9,7 @@ import messaging from "@react-native-firebase/messaging";
 import notifee from "@notifee/react-native";
 import { updateUserToken } from "../../../api/firestore/usersApi";
 
-export type UserType = "guard" | "supervisor" | "admin";
+export type UserType = "personal" | "supervisor" | "admin";
 
 const MainByRole = () => {
   const user = useUserStore((state) => state.user);
@@ -55,7 +55,7 @@ const MainByRole = () => {
 
   const role = user?.userInformation.role as UserType;
 
-  if (role === "guard") {
+  if (role === "personal") {
     return <MainGuard />;
   }
 

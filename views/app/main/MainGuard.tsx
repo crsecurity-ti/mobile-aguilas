@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { FlatList } from "react-native";
 
 import AccessCard from "./cards/AccessCard";
@@ -11,7 +11,7 @@ import HourManagementCard from "./cards/HourManagementCard";
 const MainGuard = () => {
   const data = [
     { id: "hourManagement", component: <HourManagementCard /> },
-    { id: "rounds", component: <RoundsCard role="guard" /> },
+    { id: "rounds", component: <RoundsCard role="personal" /> },
     { id: "events", component: <EventsCard /> },
     { id: "access", component: <AccessCard /> },
     { id: "access-worker", component: <AccessWorkerCard /> },

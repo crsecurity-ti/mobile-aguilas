@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+﻿import { useRouter } from "expo-router";
 import React from "react";
 import { Text } from "react-native";
 
@@ -14,10 +14,10 @@ const AdminGuardCard = () => {
           pathname: "/list-contractors",
         })
       }
-      textButton="Ir a instalaciones de guardias"
+      textButton="Ir a instalaciones de Personal"
       body={
         <>
-          <Text className="font-bold text-xl pb-2">Guardias</Text>
+          <Text className="font-bold text-xl pb-2">Personal</Text>
           <Text>Revisar Rondas por Instalaciones</Text>
         </>
       }

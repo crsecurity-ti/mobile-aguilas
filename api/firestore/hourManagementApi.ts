@@ -1,4 +1,4 @@
-import firestore from "@react-native-firebase/firestore";
+﻿import firestore from "@react-native-firebase/firestore";
 import { format } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 
@@ -6,15 +6,15 @@ export const createHourManagementInFirestore = async ({
   contractorUuid,
   businessUuid,
   userUuid,
-  type = "guard",
+  type = "personal",
 }: {
   contractorUuid?: string;
   businessUuid?: string;
   userUuid: string;
-  type?: "guard" | "supervisor";
+  type?: "personal" | "supervisor";
 }) => {
   const newUuid = uuidv4();
-  if (type === "guard" && contractorUuid) {
+  if (type === "personal" && contractorUuid) {
     const docRef = firestore()
       .collection("hour_management")
       .doc("contractor")
@@ -54,15 +54,15 @@ export const updateHourManagementInFirestore = async ({
   businessUuid,
   hourManagementUuid,
   endHour,
-  type = "guard",
+  type = "personal",
 }: {
   contractorUuid?: string;
   businessUuid?: string;
   hourManagementUuid: string;
   endHour: number;
-  type?: "guard" | "supervisor";
+  type?: "personal" | "supervisor";
 }) => {
-  if (type === "guard" && contractorUuid) {
+  if (type === "personal" && contractorUuid) {
     const docRef = firestore()
       .collection("hour_management")
       .doc("contractor")

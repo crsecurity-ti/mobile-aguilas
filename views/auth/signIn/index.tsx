@@ -1,5 +1,7 @@
 import { Controller } from "react-hook-form";
-import { Text, TextInput, View } from "react-native";
+import { Alert, Text, TextInput, View } from "react-native";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import useSignIn from "./hooks/useSignIn";
 import ButtonDS from "../../../components/ButtonDS";
@@ -7,10 +9,33 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import ButtonDSWithIcon from "../../../components/ButtonDS/ButtonDSWithIcon";
 import { useRouter } from "expo-router";
 
+const LOCATION_DISCLOSURE_KEY = "location_disclosure_shown";
+
 const SignInPage = () => {
   const router = useRouter();
 
   const { loading, onPressLogin, control, handleSubmit } = useSignIn();
+
+  useEffect(() => {
+    const showLocationDisclosure = async () => {
+      const shown = await AsyncStorage.getItem(LOCATION_DISCLOSURE_KEY);
+      if (shown) return;
+      Alert.alert(
+        "Uso de ubicación en segundo plano",
+        "Águilas Seguridad registra tu ubicación GPS durante las rondas de seguridad, " +
+          "incluso cuando la aplicación está en segundo plano o la pantalla está apagada.\n\n" +
+          "Esta información se usa exclusivamente para verificar el cumplimiento de las " +
+          "rondas y supervisar los recorridos en tiempo real.",
+        [
+          {
+            text: "Entendido",
+            onPress: () => AsyncStorage.setItem(LOCATION_DISCLOSURE_KEY, "true"),
+          },
+        ]
+      );
+    };
+    showLocationDisclosure();
+  }, []);
 
   if (loading) {
     return <LoadingSpinner text="Verificando información de acceso..." />;

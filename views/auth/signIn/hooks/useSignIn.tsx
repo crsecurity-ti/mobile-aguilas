@@ -1,4 +1,4 @@
-import auth from "@react-native-firebase/auth";
+﻿import auth from "@react-native-firebase/auth";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Toast from "react-native-toast-message";
@@ -48,12 +48,12 @@ const useSignIn = () => {
       });
       return setLoading(false);
     }
-    if (userInformation.role === "guard" && !userInformation.contractorUuid) {
+    if (userInformation.role === "personal" && !userInformation.contractorUuid) {
       Toast.show({
         type: "error",
-        text1: "Guardia sin asignación",
+        text1: "personal sin asignación",
         text2:
-          "El guardia requiere estar asignado a una instalación para ingresar a la app",
+          "El personal requiere estar asignado a una instalación para ingresar a la app",
       });
       return setLoading(false);
     }

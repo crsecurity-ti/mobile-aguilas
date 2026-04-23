@@ -26,7 +26,7 @@ export default {
             compileSdkVersion: 35,
             targetSdkVersion: 35,
             buildToolsVersion: "35.0.0",
-            androidGradlePluginVersion: "8.3.2",
+            androidGradlePluginVersion: "8.7.3",
             ndkVersion: "27.1.12297006",
             enableProguardInRelease: true,
             packagingOptions: {
@@ -90,7 +90,7 @@ export default {
         "FOREGROUND_SERVICE_DATA_SYNC",
         "com.google.android.gms.permission.AD_ID",
       ],
-      versionCode: 30,
+      versionCode: 31,
     },
     web: {
       bundler: "metro",
