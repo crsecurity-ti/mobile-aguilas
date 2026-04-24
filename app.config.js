@@ -27,7 +27,7 @@ export default {
             targetSdkVersion: 35,
             buildToolsVersion: "35.0.0",
             androidGradlePluginVersion: "8.7.3",
-            ndkVersion: "27.1.12297006",
+            ndkVersion: "28.0.12433566",
             enableProguardInRelease: true,
             packagingOptions: {
               jniLibs: {

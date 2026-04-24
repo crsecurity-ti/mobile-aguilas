@@ -11,7 +11,7 @@ import HourManagementCard from "./cards/HourManagementCard";
 const MainGuard = () => {
   const data = [
     { id: "hourManagement", component: <HourManagementCard /> },
-    { id: "rounds", component: <RoundsCard role="personal" /> },
+    { id: "rounds", component: <RoundsCard role="guard" /> },
     { id: "events", component: <EventsCard /> },
     { id: "access", component: <AccessCard /> },
     { id: "access-worker", component: <AccessWorkerCard /> },

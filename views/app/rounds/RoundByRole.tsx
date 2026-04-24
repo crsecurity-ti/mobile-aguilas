@@ -7,7 +7,7 @@ import { useUserStore } from "../../../store/auth";
 const RoundByRole = () => {
   const user = useUserStore((state) => state.user);
 
-  if (user?.userInformation.role === "personal") {
+  if (user?.userInformation.role === "guard") {
     return <RoundList />;
   }
 

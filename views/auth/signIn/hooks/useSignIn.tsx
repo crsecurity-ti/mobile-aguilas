@@ -48,7 +48,7 @@ const useSignIn = () => {
       });
       return setLoading(false);
     }
-    if (userInformation.role === "personal" && !userInformation.contractorUuid) {
+    if (userInformation.role === "guard" && !userInformation.contractorUuid) {
       Toast.show({
         type: "error",
         text1: "personal sin asignación",

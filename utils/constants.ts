@@ -31,30 +31,29 @@ export const HEADER_HEIGHT = 100;
 export const window: ScaledSize = Dimensions.get("window");
 
 export const routes = [
-  { name: "map", drawerLabel: "Cargando el Mapa ...", roles: [] },
   {
     name: "home",
     drawerLabel: "Inicio",
     title: "Aguilas Seguridad",
-    roles: ["personal", "supervisor", "admin"],
+    roles: ["guard", "supervisor", "admin"],
   },
   {
     name: "profile",
     drawerLabel: "Mi Perfil",
     title: "Mi Perfil",
-    roles: ["personal", "supervisor", "admin"],
+    roles: ["guard", "supervisor", "admin"],
   },
   {
     name: "rounds",
     drawerLabel: "Mis Rondas",
     title: "Mis Rondas",
-    roles: ["personal", "supervisor"],
+    roles: ["guard", "supervisor"],
   },
   {
     name: "events",
     drawerLabel: "Mis Eventos",
     title: "Mis Eventos",
-    roles: ["personal"],
+    roles: ["guard"],
   },
   {
     name: "new-event",
@@ -66,7 +65,7 @@ export const routes = [
     name: "permissions",
     drawerLabel: "Revisar Permisos",
     title: "Revisar Permisos",
-    roles: ["personal", "supervisor", "admin"],
+    roles: ["guard", "supervisor", "admin"],
   },
   {
     name: "details",
@@ -132,7 +131,7 @@ export const routes = [
     name: "access",
     drawerLabel: "Ingreso de Personal Externo",
     title: "Ingreso de Personal Externo",
-    roles: ["personal"],
+    roles: ["guard"],
   },
   {
     name: "access-historial",
@@ -162,19 +161,19 @@ export const routes = [
     name: "access-worker",
     drawerLabel: "Control de Acceso Interno",
     title: "Control de Acceso Interno",
-    roles: ["personal"],
+    roles: ["guard"],
   },
   {
     name: "list-documents",
     drawerLabel: "Listado de documentos",
     title: "Firmar Documentos",
-    roles: ["personal", "supervisor"],
+    roles: ["guard", "supervisor"],
   },
   {
     name: "qr-code-list",
     drawerLabel: "Listado Códigos QR",
     title: "Listado Códigos QR",
-    roles: ["personal", "supervisor"],
+    roles: ["guard", "supervisor"],
   },
   {
     name: "validate-qr-code",
@@ -186,7 +185,7 @@ export const routes = [
     name: "todo-list",
     drawerLabel: "Listado de Tareas",
     title: "Listado de Tareas",
-    roles: ["personal", "supervisor"],
+    roles: ["guard", "supervisor"],
   },
   {
     name: "todo-simple",
@@ -198,14 +197,15 @@ export const routes = [
     name: "sync",
     drawerLabel: "Sincronizaciones",
     title: "Sincronizaciones",
-    roles: ["personal", "supervisor"],
+    roles: ["guard", "supervisor"],
   },
   {
     name: "camera-face-recognition",
     drawerLabel: "Reconocimiento Facial",
     title: "Reconocimiento Facial",
-    roles: ["personal"],
+    roles: ["guard"],
   },
+  { name: "map", drawerLabel: "Mapa", roles: [] },
 ];
 
 export const LOCATION_TASK_NAME = "background-location-task";
