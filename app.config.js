@@ -31,7 +31,7 @@ export default {
             enableProguardInRelease: true,
             packagingOptions: {
               jniLibs: {
-                useLegacyPackaging: false,
+                useLegacyPackaging: true,
               },
             },
           },
@@ -90,7 +90,7 @@ export default {
         "FOREGROUND_SERVICE_DATA_SYNC",
         "com.google.android.gms.permission.AD_ID",
       ],
-      versionCode: 31,
+      versionCode: 34,
     },
     web: {
       bundler: "metro",
