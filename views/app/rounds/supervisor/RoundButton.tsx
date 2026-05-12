@@ -35,14 +35,19 @@ const RoundButton = ({ roundSupervisor, type }: RoundButtonProps) => {
         text2: "Felicitaciones, iniciaste con éxito la ronda",
       });
       setLastSupervisorRound({ uuid: roundSupervisor.uuid });
-      await startTracking();
-      return await updateRoundSupervisorTimeDb({
+      try {
+        await startTracking();
+      } catch (e) {
+        console.error("startTracking failed:", e);
+      }
+      await updateRoundSupervisorTimeDb({
         roundUuid: roundSupervisor.uuid,
         startRound: {
           time: new Date().toISOString(),
         },
         userUuid: user?.uuid ?? "",
       });
+      return;
     }
 
     Toast.show({
