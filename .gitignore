@@ -30,3 +30,4 @@ ios/
 google-services.json
 google-services_prod.json
 GoogleService-Info.plist
+GoogleService-Info-qa.plist
