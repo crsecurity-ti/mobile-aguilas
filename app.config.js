@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { withGradleProperties } from "@expo/config-plugins";
 
 const isProduction = process.env.APP_ENV === "production";
 const packageName = isProduction
@@ -15,9 +16,23 @@ export default {
     scheme: "myapp",
     userInterfaceStyle: "automatic",
     plugins: [
+      (config) =>
+        withGradleProperties(config, (mod) => {
+          mod.modResults = mod.modResults.filter(
+            (p) => p.key !== "reactNativeArchitectures"
+          );
+          mod.modResults.push({
+            type: "property",
+            key: "reactNativeArchitectures",
+            value: "armeabi-v7a,arm64-v8a",
+          });
+          return mod;
+        }),
+      "./plugins/withAndroid16kbSupport",
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
       "./plugins/withBackgroundActions.js",
+      "./plugins/withGrpcFix.js",
       [
         "expo-build-properties",
         {
@@ -30,8 +45,15 @@ export default {
             ndkVersion: "28.0.12433566",
             enableProguardInRelease: true,
             packagingOptions: {
+              exclude: ["**/x86_64/**", "**/x86/**"],
+              pickFirst: [
+                "**/libjsi.so",
+                "**/libreactnative.so",
+                "**/libc++_shared.so",
+                "**/libfbjni.so",
+              ],
               jniLibs: {
-                useLegacyPackaging: true,
+                useLegacyPackaging: false,
               },
             },
           },
@@ -42,6 +64,11 @@ export default {
         {
           locationAlwaysAndWhenInUsePermission:
             "Allow Aguilas Security to use your location.",
+          locationAlwaysPermission:
+            "Allow Aguilas Security to use your location in the background.",
+          locationWhenInUsePermission:
+            "Allow Aguilas Security to use your location.",
+          isIosBackgroundLocationEnabled: true,
         },
       ],
       [
@@ -63,8 +90,20 @@ export default {
     ios: {
       infoPlist: {
         NSCameraUsageDescription:
-          "Esta app utiliza la cámara para validar los codigos qr.",
+          "Esta app utiliza la cámara para validar los codigos QR.",
+        NSLocationAlwaysAndWhenInUseUsageDescription:
+          "Esta app necesita acceso a tu ubicación para registrar rondas de seguridad.",
+        NSLocationAlwaysUsageDescription:
+          "Esta app necesita acceso a tu ubicación en segundo plano para registrar rondas de seguridad.",
+        NSLocationWhenInUseUsageDescription:
+          "Esta app necesita acceso a tu ubicación para registrar rondas de seguridad.",
+        NFCReaderUsageDescription:
+          "Esta app utiliza NFC para validar puntos de control de seguridad.",
         UIBackgroundModes: ["location", "fetch", "remote-notification"],
+      },
+      entitlements: {
+        "com.apple.developer.nfc.readersession.formats": ["NDEF", "TAG"],
+        "aps-environment": "production",
       },
       googleServicesFile: process.env.GOOGLE_SERVICES_PLIST ?? "./ios/GoogleService-Info.plist",
       bundleIdentifier: packageName,
@@ -90,7 +129,7 @@ export default {
         "FOREGROUND_SERVICE_DATA_SYNC",
         "com.google.android.gms.permission.AD_ID",
       ],
-      versionCode: 34,
+      versionCode: 38,
     },
     web: {
       bundler: "metro",
