@@ -11,10 +11,10 @@ module.exports = function withGrpcFix(config) {
 
       const marker = "# gRPC-Core pre-release fix";
       if (!contents.includes(marker)) {
-        // Insert before the closing "end" of the target block
+        // Insert before post_install block (still inside target block)
         contents = contents.replace(
-          /^end\s*$/m,
-          `  ${marker}\n  pod 'gRPC-Core', '1.65.5'\nend`
+          /(\n\s*post_install do \|installer\|)/,
+          `\n  ${marker}\n  pod 'gRPC-Core', '1.65.5'\n$1`
         );
         fs.writeFileSync(podfilePath, contents);
       }
