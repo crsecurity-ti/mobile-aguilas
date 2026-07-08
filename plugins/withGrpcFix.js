@@ -36,6 +36,7 @@ const path = require("path");
 //         los targets (evita repetir este fix cada vez que aparece un target
 //         nuevo con el mismo problema). NO usar use_frameworks! para esto
 //         (rompe op-sqlite, ver Fix 5) — este fix es aditivo y no toca linkage.
+//         (Fix 10 corrige la ruta exacta usada acá — ver más abajo.)
 //
 // Fix 8: Fix 7 no alcanzó — el log de Xcode confirmó que 'Copy generated
 //         compatibility header' corre para FirebaseCrashlytics/FirebaseFirestore
@@ -69,6 +70,16 @@ const path = require("path");
 //         los podspecs en node_modules (mismo mecanismo que Fix 2) para agregar
 //         's.dependency FirebaseAuth' explícito — así CocoaPods arma el grafo
 //         de dependencias/search paths correctamente, sin depender de suerte.
+//
+// Fix 10: log real confirmó que 'Copy generated compatibility header' de
+//         FirebaseAuth SÍ corrió antes de que RNFBStorage fallara (no era
+//         problema de orden — Fix 8/9 no eran la causa real esta vez). El
+//         header existe en disco pero Fix 7 apuntaba a la ruta incorrecta:
+//         CocoaPods instala el header en
+//         "${PODS_CONFIGURATION_BUILD_DIR}/<Pod>/include/<Pod>/<Pod>-Swift.h",
+//         y Fix 7 solo agregaba ".../<Pod>" (le faltaba "/include"). Cambiado
+//         a ".../<Pod>/**" (glob recursivo) para no depender de acertar el
+//         subpath exacto.
 
 const GRPC_FIX_MARKER = "# gRPC-Core / Firebase sub-pods version fix";
 const POST_INSTALL_MARKER = "# Fix FirebaseAuth DEFINES_MODULE";
@@ -212,7 +223,7 @@ module.exports = function withGrpcFix(config) {
           "      target.build_configurations.each do |cfg|",
           "        cfg.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']",
           "        firebase_swift_pods.each do |pod_name|",
-          "          cfg.build_settings['HEADER_SEARCH_PATHS'] << \"\\\"${PODS_CONFIGURATION_BUILD_DIR}/#{pod_name}\\\"\"",
+          "          cfg.build_settings['HEADER_SEARCH_PATHS'] << \"\\\"${PODS_CONFIGURATION_BUILD_DIR}/#{pod_name}/**\\\"\"",
           "        end",
           "      end",
           "    end",
