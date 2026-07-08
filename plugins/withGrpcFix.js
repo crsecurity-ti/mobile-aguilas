@@ -37,9 +37,16 @@ module.exports = function withGrpcFix(config) {
         }
       }
 
-      // --- Fix 1 + 3: parchear Podfile ---
+      // --- Fix 1 + 3 + 4: parchear Podfile ---
       const podfilePath = path.join(mod.modRequest.platformProjectRoot, "Podfile");
       let contents = fs.readFileSync(podfilePath, "utf8");
+
+      // Fix 4: MLKitFaceDetection 6.x requiere iOS 16.0 mínimo.
+      //         Sobreescribir la línea de platform directamente en el Podfile.
+      contents = contents.replace(
+        /platform :ios, podfile_properties\['ios\.deploymentTarget'\] \|\| '[^']+'/,
+        "platform :ios, '16.0'"
+      );
 
       if (!contents.includes(GRPC_FIX_MARKER)) {
         const pods = [
