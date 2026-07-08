@@ -31,7 +31,7 @@ module.exports = function withGrpcFix(config) {
         if (podspec.includes('GoogleMLKit/FaceDetection')) {
           podspec = podspec.replace(
             's.dependency "GoogleMLKit/FaceDetection"',
-            's.dependency "MLKitFaceDetection", "~> 6.0"\n  s.dependency "MLKitVision", "~> 6.0"'
+            's.dependency "MLKitFaceDetection", "~> 6.0"'
           );
           fs.writeFileSync(podspecPath, podspec);
         }
