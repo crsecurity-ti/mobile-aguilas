@@ -62,6 +62,14 @@ module.exports = function withGrpcFix(config) {
         "platform :ios, '16.0'"
       );
 
+      // Fix 6: use_frameworks! :static causa "Multiple commands produce libsql.h"
+      //         en op-sqlite porque dos build phases copian el mismo header.
+      //         disable_input_output_paths evita que Xcode detecte el conflicto.
+      contents = contents.replace(
+        "install! 'cocoapods',\n  :deterministic_uuids => false",
+        "install! 'cocoapods',\n  :deterministic_uuids => false,\n  :disable_input_output_paths => true"
+      );
+
       if (!contents.includes(GRPC_FIX_MARKER)) {
         const pods = [
           "  # gRPC-Core pre-release — declarar explícitamente para forzar instalación",
