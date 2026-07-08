@@ -59,6 +59,7 @@ module.exports = function withGrpcFix(config) {
           "  pod 'FirebaseInstallations', '~> 11.8.0', :modular_headers => true",
           "  pod 'FirebaseSessions', '~> 11.8.0', :modular_headers => true",
           "  pod 'FirebaseCoreExtension', '~> 11.8.0', :modular_headers => true",
+          "  pod 'FirebaseAuth', :modular_headers => true",
           "  pod 'FirebaseCore', :modular_headers => true",
           "  pod 'FirebaseCoreInternal', :modular_headers => true",
           "  pod 'FirebaseFirestoreInternal', :modular_headers => true",
