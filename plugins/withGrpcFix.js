@@ -17,9 +17,29 @@ const path = require("path");
 //         en modo static library. DEFINES_MODULE = YES fuerza la generación del
 //         module map y el Swift umbrella header sin necesitar use_frameworks!.
 //         (use_frameworks! :static fue descartado — rompe op-sqlite con libsql.h duplicado)
+//
+// Fix 6: pod install falla porque los pods Swift de Firebase (Auth, CoreInternal,
+//         Crashlytics, Database, Firestore, Sessions, Storage) dependen de pods
+//         ObjC (GoogleUtilities, RecaptchaInterop, FirebaseCore, etc.) que no
+//         definen módulo. :modular_headers => true por pod resuelve ESTO (falla
+//         de pod install), es un problema DISTINTO del Fix 5 (Swift header para
+//         RNFBStorage) — son complementarios, no alternativos. NO usar
+//         use_modular_headers! global (rompe gRPC-Core module maps).
+//
+// Fix 7: aunque DEFINES_MODULE=YES (Fix 5/6) genera el -Swift.h de cada pod
+//         Firebase, lo genera en tiempo de COMPILACIÓN dentro del build product
+//         del propio pod. CocoaPods solo copia a Headers/Public los .h que ya
+//         existen en pod install — el -Swift.h generado nunca llega ahí, por lo
+//         que otros targets (RNFBStorage, RNFBFirestore, etc.) no lo encuentran
+//         aunque el header sí exista. Agregamos HEADER_SEARCH_PATHS explícito
+//         apuntando al build product de cada pod Swift de Firebase, para TODOS
+//         los targets (evita repetir este fix cada vez que aparece un target
+//         nuevo con el mismo problema). NO usar use_frameworks! para esto
+//         (rompe op-sqlite, ver Fix 5) — este fix es aditivo y no toca linkage.
 
 const GRPC_FIX_MARKER = "# gRPC-Core / Firebase sub-pods version fix";
 const POST_INSTALL_MARKER = "# Fix FirebaseAuth DEFINES_MODULE";
+const HEADER_SEARCH_MARKER = "# Fix HEADER_SEARCH_PATHS para -Swift.h generados de Firebase";
 
 module.exports = function withGrpcFix(config) {
   return withDangerousMod(config, [
@@ -70,10 +90,22 @@ module.exports = function withGrpcFix(config) {
           "  pod 'gRPC-Core', '1.65.5'",
           "  pod 'gRPC-C++', '1.65.5'",
           "",
-          "  # Firebase sub-pods — pinar a 11.8.x para evitar conflicto FirebaseCore",
-          "  pod 'FirebaseInstallations', '~> 11.8.0'",
-          "  pod 'FirebaseSessions', '~> 11.8.0'",
-          "  pod 'FirebaseCoreExtension', '~> 11.8.0'",
+          "  # Firebase ObjC pods: pinar versión + modular_headers para Swift interop.",
+          "  # NO usar use_modular_headers! global — rompe gRPC-Core module maps.",
+          "  pod 'FirebaseInstallations', '~> 11.8.0', :modular_headers => true",
+          "  pod 'FirebaseSessions', '~> 11.8.0', :modular_headers => true",
+          "  pod 'FirebaseCoreExtension', '~> 11.8.0', :modular_headers => true",
+          "  pod 'FirebaseAuth', :modular_headers => true",
+          "  pod 'FirebaseCore', :modular_headers => true",
+          "  pod 'FirebaseCoreInternal', :modular_headers => true",
+          "  pod 'FirebaseFirestoreInternal', :modular_headers => true",
+          "  pod 'FirebaseAuthInterop', :modular_headers => true",
+          "  pod 'FirebaseAppCheckInterop', :modular_headers => true",
+          "  pod 'GoogleUtilities', :modular_headers => true",
+          "  pod 'GoogleDataTransport', :modular_headers => true",
+          "  pod 'RecaptchaInterop', :modular_headers => true",
+          "  pod 'leveldb-library', :modular_headers => true",
+          "  pod 'nanopb', :modular_headers => true",
         ].join("\n");
 
         contents = contents.replace(
@@ -100,6 +132,34 @@ module.exports = function withGrpcFix(config) {
         contents = contents.replace(
           "\n    installer.target_installation_results",
           `\n${firebaseAuthFix}    installer.target_installation_results`
+        );
+      }
+
+      // Fix 7: HEADER_SEARCH_PATHS para que cualquier target encuentre los
+      // -Swift.h generados por los pods Swift de Firebase (DEFINES_MODULE=YES
+      // solo genera el header dentro del build product del pod que lo genera;
+      // CocoaPods no lo copia a Headers/Public porque no existe hasta compile-time).
+      if (!contents.includes(HEADER_SEARCH_MARKER)) {
+        const headerSearchFix = [
+          `    ${HEADER_SEARCH_MARKER}`,
+          "    firebase_swift_pods = %w[",
+          "      FirebaseAuth FirebaseCoreInternal FirebaseCrashlytics",
+          "      FirebaseDatabase FirebaseFirestore FirebaseSessions FirebaseStorage",
+          "    ]",
+          "    installer.pods_project.targets.each do |target|",
+          "      target.build_configurations.each do |cfg|",
+          "        cfg.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']",
+          "        firebase_swift_pods.each do |pod_name|",
+          "          cfg.build_settings['HEADER_SEARCH_PATHS'] << \"\\\"${PODS_CONFIGURATION_BUILD_DIR}/#{pod_name}\\\"\"",
+          "        end",
+          "      end",
+          "    end",
+          "",
+        ].join("\n");
+
+        contents = contents.replace(
+          "\n    installer.target_installation_results",
+          `\n${headerSearchFix}    installer.target_installation_results`
         );
       }
 
