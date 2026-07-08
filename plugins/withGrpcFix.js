@@ -48,15 +48,6 @@ module.exports = function withGrpcFix(config) {
         "platform :ios, '16.0'"
       );
 
-      // Fix 5: Firebase Swift pods necesitan use_modular_headers! para compilar
-      //         como static libraries (sin use_frameworks!).
-      if (!contents.includes("use_modular_headers!")) {
-        contents = contents.replace(
-          "\ntarget 'AguilasSeguridad' do",
-          "\nuse_modular_headers!\n\ntarget 'AguilasSeguridad' do"
-        );
-      }
-
       if (!contents.includes(GRPC_FIX_MARKER)) {
         const pods = [
           "  # gRPC-Core pre-release — declarar explícitamente para forzar instalación",
@@ -64,18 +55,31 @@ module.exports = function withGrpcFix(config) {
           "  pod 'gRPC-C++', '1.65.5'",
           "",
           "  # Firebase sub-pods — pinar a 11.8.x para evitar que resuelvan a 11.9.0",
-          "  # y causen conflicto de FirebaseCore ~> 11.8.0 vs ~> 11.9.0",
           "  pod 'FirebaseInstallations', '~> 11.8.0'",
           "  pod 'FirebaseSessions', '~> 11.8.0'",
           "  pod 'FirebaseCoreExtension', '~> 11.8.0'",
+          "",
+          "  # Firebase ObjC pods necesitan modular_headers para ser importados",
+          "  # por pods Swift (FirebaseAuth, FirebaseCrashlytics, etc.) como static libs.",
+          "  # NO aplicar globalmente (use_modular_headers!) — rompe gRPC-Core.",
+          "  pod 'GoogleUtilities', :modular_headers => true",
+          "  pod 'FirebaseCore', :modular_headers => true",
+          "  pod 'FirebaseCoreInternal', :modular_headers => true",
+          "  pod 'FirebaseCoreExtension', :modular_headers => true",
+          "  pod 'FirebaseAuthInterop', :modular_headers => true",
+          "  pod 'FirebaseAppCheckInterop', :modular_headers => true",
+          "  pod 'RecaptchaInterop', :modular_headers => true",
+          "  pod 'leveldb-library', :modular_headers => true",
+          "  pod 'nanopb', :modular_headers => true",
         ].join("\n");
 
         contents = contents.replace(
           "\n  post_install do |installer|",
           `\n  ${GRPC_FIX_MARKER}\n${pods}\n\n  post_install do |installer|`
         );
-        fs.writeFileSync(podfilePath, contents);
       }
+
+      fs.writeFileSync(podfilePath, contents);
 
       return mod;
     },
