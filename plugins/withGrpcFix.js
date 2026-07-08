@@ -48,6 +48,15 @@ module.exports = function withGrpcFix(config) {
         "platform :ios, '16.0'"
       );
 
+      // Fix 5: Firebase Swift pods necesitan use_modular_headers! para compilar
+      //         como static libraries (sin use_frameworks!).
+      if (!contents.includes("use_modular_headers!")) {
+        contents = contents.replace(
+          "\ntarget 'AguilasSeguridad' do",
+          "\nuse_modular_headers!\n\ntarget 'AguilasSeguridad' do"
+        );
+      }
+
       if (!contents.includes(GRPC_FIX_MARKER)) {
         const pods = [
           "  # gRPC-Core pre-release — declarar explícitamente para forzar instalación",
