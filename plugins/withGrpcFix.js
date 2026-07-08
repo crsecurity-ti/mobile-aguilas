@@ -36,10 +36,25 @@ const path = require("path");
 //         los targets (evita repetir este fix cada vez que aparece un target
 //         nuevo con el mismo problema). NO usar use_frameworks! para esto
 //         (rompe op-sqlite, ver Fix 5) — este fix es aditivo y no toca linkage.
+//
+// Fix 8: Fix 7 no alcanzó — el log de Xcode confirmó que 'Copy generated
+//         compatibility header' corre para FirebaseCrashlytics/FirebaseFirestore
+//         (ambos son dependencia CocoaPods directa de sus wrappers RNFB) pero NO
+//         para FirebaseAuth antes de que RNFBStorage compile. Causa real: el
+//         podspec de FirebaseStorage depende de FirebaseAuthInterop (protocolo),
+//         NO de FirebaseAuth (implementación) — Xcode no tiene ningún target
+//         dependency real entre RNFBStorage y FirebaseAuth, aunque RNFBStorage
+//         importe FirebaseAuth-Swift.h indirectamente vía el umbrella Firebase.h.
+//         Sin esa dependency, no hay garantía de orden de build: es carrera,
+//         no problema de search path (el header puede no existir aún cuando
+//         RNFBStorage compila). Forzamos la dependencia explícita en Xcode para
+//         que cualquier target RNFB* espere a que FirebaseAuth termine de generar
+//         su header antes de compilar.
 
 const GRPC_FIX_MARKER = "# gRPC-Core / Firebase sub-pods version fix";
 const POST_INSTALL_MARKER = "# Fix FirebaseAuth DEFINES_MODULE";
 const HEADER_SEARCH_MARKER = "# Fix HEADER_SEARCH_PATHS para -Swift.h generados de Firebase";
+const BUILD_ORDER_MARKER = "# Fix build order RNFB* -> FirebaseAuth (target dependency explícita)";
 
 module.exports = function withGrpcFix(config) {
   return withDangerousMod(config, [
@@ -160,6 +175,28 @@ module.exports = function withGrpcFix(config) {
         contents = contents.replace(
           "\n    installer.target_installation_results",
           `\n${headerSearchFix}    installer.target_installation_results`
+        );
+      }
+
+      // Fix 8: forzar target dependency RNFB* -> FirebaseAuth para garantizar
+      // orden de build (ver comentario Fix 8 arriba).
+      if (!contents.includes(BUILD_ORDER_MARKER)) {
+        const buildOrderFix = [
+          `    ${BUILD_ORDER_MARKER}`,
+          "    firebase_auth_target = installer.pods_project.targets.find { |t| t.name == 'FirebaseAuth' }",
+          "    if firebase_auth_target",
+          "      installer.pods_project.targets.each do |target|",
+          "        if target.name.start_with?('RNFB') && target.name != 'FirebaseAuth'",
+          "          target.add_dependency(firebase_auth_target)",
+          "        end",
+          "      end",
+          "    end",
+          "",
+        ].join("\n");
+
+        contents = contents.replace(
+          "\n    installer.target_installation_results",
+          `\n${buildOrderFix}    installer.target_installation_results`
         );
       }
 
