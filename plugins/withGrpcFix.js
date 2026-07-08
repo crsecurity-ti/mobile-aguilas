@@ -50,6 +50,25 @@ const path = require("path");
 //         RNFBStorage compila). Forzamos la dependencia explícita en Xcode para
 //         que cualquier target RNFB* espere a que FirebaseAuth termine de generar
 //         su header antes de compilar.
+//
+// Fix 9: Fix 8 no garantiza el problema de raíz — el target que falla "se mueve"
+//         entre builds (antes RNFBStorage, ahora RNFBApp), señal de que es una
+//         carrera de scheduling de Xcode, no algo resuelto de forma determinística.
+//         Causa raíz real: RNFBApp/RNFBStorage/RNFBCrashlytics/RNFBDatabase/
+//         RNFBFirestore/RNFBMessaging importan <Firebase/Firebase.h> (umbrella),
+//         que incluye FirebaseAuth-Swift.h porque @react-native-firebase/auth
+//         está instalado — pero NINGUNO de esos podspecs declara 'FirebaseAuth'
+//         como dependencia CocoaPods real (solo RNFBAuth la declara, vía
+//         'Firebase/Auth'). Sin esa dependencia declarada, CocoaPods no genera
+//         el grafo de build correcto (ni search paths ni target dependency
+//         reales) — por eso Crashlytics/Firestore "funcionan" ahora mismo: es
+//         suerte de scheduling (targets grandes, terminan compilando después),
+//         no una garantía. RNFBCrashlytics y RNFBMessaging YA tienen precedente
+//         de este mismo patrón: agregan 'FirebaseCoreExtension' a mano en su
+//         podspec por el mismo motivo. Replicamos exactamente eso: parcheamos
+//         los podspecs en node_modules (mismo mecanismo que Fix 2) para agregar
+//         's.dependency FirebaseAuth' explícito — así CocoaPods arma el grafo
+//         de dependencias/search paths correctamente, sin depender de suerte.
 
 const GRPC_FIX_MARKER = "# gRPC-Core / Firebase sub-pods version fix";
 const POST_INSTALL_MARKER = "# Fix FirebaseAuth DEFINES_MODULE";
@@ -76,6 +95,34 @@ module.exports = function withGrpcFix(config) {
           fs.writeFileSync(podspecPath, podspec);
         }
       }
+
+      // --- Fix 9: agregar 'FirebaseAuth' como dependencia CocoaPods real en los
+      // podspecs de RNFB que importan <Firebase/Firebase.h> pero no la declaran ---
+      const rnfbPodspecs = [
+        "app/RNFBApp.podspec",
+        "crashlytics/RNFBCrashlytics.podspec",
+        "database/RNFBDatabase.podspec",
+        "firestore/RNFBFirestore.podspec",
+        "messaging/RNFBMessaging.podspec",
+        "storage/RNFBStorage.podspec",
+      ];
+      rnfbPodspecs.forEach((relPath) => {
+        const rnfbPodspecPath = path.join(
+          mod.modRequest.projectRoot,
+          "node_modules/@react-native-firebase",
+          relPath
+        );
+        if (fs.existsSync(rnfbPodspecPath)) {
+          let rnfbPodspec = fs.readFileSync(rnfbPodspecPath, "utf8");
+          if (!/s\.dependency\s+'FirebaseAuth'/.test(rnfbPodspec)) {
+            rnfbPodspec = rnfbPodspec.replace(
+              /(s\.dependency\s+'Firebase\/[^']+'.*\n)/,
+              `$1  s.dependency          'FirebaseAuth'\n`
+            );
+            fs.writeFileSync(rnfbPodspecPath, rnfbPodspec);
+          }
+        }
+      });
 
       // --- Asegurar que use_frameworks NO esté activado (revertir si fue seteado) ---
       const podfilePropertiesPath = path.join(
