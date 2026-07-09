@@ -38,6 +38,7 @@ export default {
         {
           ios: {
             deploymentTarget: "16.0",
+            useFrameworks: "static",
           },
           android: {
             minSdkVersion: 26,
