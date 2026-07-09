@@ -80,6 +80,19 @@ const path = require("path");
 //         y Fix 7 solo agregaba ".../<Pod>" (le faltaba "/include"). Cambiado
 //         a ".../<Pod>/**" (glob recursivo) para no depender de acertar el
 //         subpath exacto.
+//
+// Fix 11: Fix 10 tampoco alcanzó (mismo error, mismo target). 5 intentos
+//         seguidos (Fix 6-10) atacando "cómo/cuándo/dónde" se genera y
+//         encuentra el header fallaron igual. Se confirmó por grep que
+//         RNFBStorageModule.m/RNFBStorageCommon.m solo usan símbolos FIRApp
+//         (FirebaseCore) y FIRStorage* (FirebaseStorage) — CERO símbolos de
+//         Auth. El único motivo por el que arrastran FirebaseAuth-Swift.h es
+//         que importan el umbrella <Firebase/Firebase.h> (agrega TODOS los
+//         productos Firebase habilitados en el proyecto, incluido Auth,
+//         porque @react-native-firebase/auth está instalado). Reemplazamos
+//         ese import por los headers específicos que sí necesitan — elimina
+//         la dependencia hacia el header de Auth de raíz, sin importar orden
+//         de build ni search paths.
 
 const GRPC_FIX_MARKER = "# gRPC-Core / Firebase sub-pods version fix";
 const POST_INSTALL_MARKER = "# Fix FirebaseAuth DEFINES_MODULE";
@@ -106,6 +119,30 @@ module.exports = function withGrpcFix(config) {
           fs.writeFileSync(podspecPath, podspec);
         }
       }
+
+      // --- Fix 11: reemplazar #import <Firebase/Firebase.h> por headers
+      // específicos en RNFBStorage — solo usa FIRApp/FIRStorage*, no Auth ---
+      const rnfbStorageFiles = [
+        "storage/ios/RNFBStorage/RNFBStorageModule.m",
+        "storage/ios/RNFBStorage/RNFBStorageCommon.m",
+      ];
+      rnfbStorageFiles.forEach((relPath) => {
+        const filePath = path.join(
+          mod.modRequest.projectRoot,
+          "node_modules/@react-native-firebase",
+          relPath
+        );
+        if (fs.existsSync(filePath)) {
+          let source = fs.readFileSync(filePath, "utf8");
+          if (source.includes("#import <Firebase/Firebase.h>")) {
+            source = source.replace(
+              "#import <Firebase/Firebase.h>",
+              "#import <FirebaseCore/FirebaseCore.h>\n#import <FirebaseStorage/FirebaseStorage.h>"
+            );
+            fs.writeFileSync(filePath, source);
+          }
+        }
+      });
 
       // --- Fix 9: agregar 'FirebaseAuth' como dependencia CocoaPods real en los
       // podspecs de RNFB que importan <Firebase/Firebase.h> pero no la declaran ---
