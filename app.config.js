@@ -7,7 +7,7 @@ export default {
   expo: {
     name: "AguilasSeguridad",
     slug: "ASMobileApp",
-    version: "1.7.4",
+    version: "1.7.7",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "myapp",
