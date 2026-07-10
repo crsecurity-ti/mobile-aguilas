@@ -1,10 +1,7 @@
 import "dotenv/config";
 import { withGradleProperties } from "@expo/config-plugins";
 
-const isProduction = process.env.APP_ENV === "production";
-const packageName = isProduction
-  ? "com.aguilasseguridad.asmobileapp"
-  : "com.aguilasseguridadqa1.asmobileapp";
+const packageName = "com.aguilasseguridad.asmobileapp";
 
 export default {
   expo: {

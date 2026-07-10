@@ -35,6 +35,27 @@
         "simulator": true
       }
     },
+    "qa-testflight": {
+      "distribution": "internal",
+      "environment": "preview",
+      "env": {
+        "APP_ENV": "production"
+      },
+      "ios": {
+        "distribution": "store",
+        "image": "macos-sequoia-15.5-xcode-26.0"
+      }
+    },
+    "qa-device": {
+      "distribution": "internal",
+      "environment": "preview",
+      "env": {
+        "APP_ENV": "qa"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "production": {
       "environment": "production",
       "env": {
