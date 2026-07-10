@@ -89,5 +89,8 @@
         "APP_ENV": "production"
       }
     }
+  },
+  "cli": {
+    "appVersionSource": "remote"
   }
 }
