@@ -103,7 +103,7 @@ export default {
         UIBackgroundModes: ["location", "fetch", "remote-notification"],
       },
       entitlements: {
-        "com.apple.developer.nfc.readersession.formats": ["NDEF", "TAG"],
+        "com.apple.developer.nfc.readersession.formats": ["TAG"],
         "aps-environment": "production",
       },
       googleServicesFile: process.env.GOOGLE_SERVICES_PLIST ?? "./ios/GoogleService-Info.plist",
