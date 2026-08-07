@@ -66,7 +66,7 @@ const BarCodeContainer = ({
         <Text style={{ textAlign: "center" }}>
           Necesitamos tu permiso para poder utilizar la cámara
         </Text>
-        <Button onPress={requestPermission} title="Otorgar permiso" />
+        <Button onPress={requestPermission} title="Continuar" />
       </View>
     );
 

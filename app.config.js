@@ -91,13 +91,13 @@ export default {
     ios: {
       infoPlist: {
         NSCameraUsageDescription:
-          "Esta app utiliza la cámara para validar los codigos QR.",
+          "Aguilas Seguridad usa la cámara para escanear códigos QR al iniciar y cerrar turnos de seguridad, y para verificar la identidad del guardia mediante reconocimiento facial.",
         NSLocationAlwaysAndWhenInUseUsageDescription:
-          "Esta app necesita acceso a tu ubicación para registrar rondas de seguridad.",
+          "Aguilas Seguridad registra tu ubicación GPS al completar cada punto de control durante una ronda de seguridad, tanto en primer plano como en segundo plano. Por ejemplo, al marcar un checkpoint en la ronda nocturna, se guarda tu posición para verificar que el guardia estuvo en el lugar correcto.",
         NSLocationAlwaysUsageDescription:
-          "Esta app necesita acceso a tu ubicación en segundo plano para registrar rondas de seguridad.",
+          "Aguilas Seguridad registra tu ubicación GPS en segundo plano para rastrear el recorrido completo de la ronda de seguridad, incluso cuando la app no está visible. Por ejemplo, el sistema registra automáticamente cada punto del recorrido para que el supervisor pueda verificar la ruta cumplida.",
         NSLocationWhenInUseUsageDescription:
-          "Esta app necesita acceso a tu ubicación para registrar rondas de seguridad.",
+          "Aguilas Seguridad registra tu ubicación GPS al marcar cada punto de control durante una ronda de seguridad. Por ejemplo, al llegar al checkpoint 'Entrada Principal', se guarda tu posición exacta para verificar que el guardia realizó el recorrido correctamente.",
         NFCReaderUsageDescription:
           "Esta app utiliza NFC para validar puntos de control de seguridad.",
         UIBackgroundModes: ["location", "fetch", "remote-notification"],
@@ -108,6 +108,7 @@ export default {
       },
       googleServicesFile: process.env.GOOGLE_SERVICES_PLIST ?? "./ios/GoogleService-Info.plist",
       bundleIdentifier: packageName,
+      buildNumber: "2",
       supportsTablet: true,
     },
     android: {
