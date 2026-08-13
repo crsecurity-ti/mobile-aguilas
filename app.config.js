@@ -1,13 +1,16 @@
 import "dotenv/config";
 import { withGradleProperties } from "@expo/config-plugins";
 
-const packageName = "com.aguilasseguridad.asmobileapp";
+const isProduction = process.env.APP_ENV === "production";
+const packageName = isProduction
+  ? "com.aguilasseguridad.asmobileapp"
+  : "com.aguilasseguridadqa1.asmobileapp";
 
 export default {
   expo: {
     name: "AguilasSeguridad",
     slug: "ASMobileApp",
-    version: "1.7.7",
+    version: "1.7.8",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "myapp",

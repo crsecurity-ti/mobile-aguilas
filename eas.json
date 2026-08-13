@@ -57,6 +57,18 @@
         "buildType": "apk"
       }
     },
+    "prod-testflight": {
+      "distribution": "internal",
+      "environment": "production",
+      "env": {
+        "APP_ENV": "production"
+      },
+      "ios": {
+        "distribution": "store",
+        "image": "latest",
+        "autoIncrement": true
+      }
+    },
     "production": {
       "environment": "production",
       "env": {
@@ -66,7 +78,9 @@
         "buildType": "app-bundle"
       },
       "ios": {
-        "distribution": "store"
+        "distribution": "store",
+        "image": "latest",
+        "autoIncrement": true
       }
     },
     "preview-prod": {

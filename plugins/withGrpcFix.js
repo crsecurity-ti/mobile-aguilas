@@ -22,6 +22,7 @@ const path = require("path");
 
 const GRPC_FIX_MARKER = "# gRPC-Core / Firebase sub-pods version fix";
 const PRE_INSTALL_MARKER = "# Fix op-sqlite static_library bajo use_frameworks!";
+const FMT_FIX_MARKER = "# Patch fmt/base.h for Xcode 26 consteval incompatibility";
 
 module.exports = function withGrpcFix(config) {
   return withDangerousMod(config, [
@@ -117,6 +118,35 @@ module.exports = function withGrpcFix(config) {
         contents = contents.replace(
           "\n  post_install do |installer|",
           `\n  ${GRPC_FIX_MARKER}\n${pods}\n\n  post_install do |installer|`
+        );
+      }
+
+      // Fix fmt consteval: Xcode 26 Clang es más estricto con consteval.
+      // fmt/base.h define FMT_USE_CONSTEVAL via cadena #if/#elif/#else sin guard externo,
+      // así que cualquier -D flag o #define previo es sobreescrito. Solución: parchear
+      // fmt/base.h agregando #undef + #define 0 DESPUÉS del bloque #endif y ANTES de
+      // #if FMT_USE_CONSTEVAL, forzando 0 sin importar qué rama eligió el compilador.
+      if (!contents.includes(FMT_FIX_MARKER)) {
+        const fmtFix = [
+          "    " + FMT_FIX_MARKER,
+          "    fmt_base_h = File.join(installer.sandbox.root, 'fmt', 'include', 'fmt', 'base.h')",
+          "    if File.exist?(fmt_base_h)",
+          "      fmt_content = File.read(fmt_base_h)",
+          "      unless fmt_content.include?('FMT_USE_CONSTEVAL 0 // xcode26')",
+          "        patched = fmt_content.sub(",
+          "          \"#endif\\n#if FMT_USE_CONSTEVAL\",",
+          "          \"#endif\\n#undef FMT_USE_CONSTEVAL\\n#define FMT_USE_CONSTEVAL 0 // xcode26\\n#if FMT_USE_CONSTEVAL\"",
+          "        )",
+          "        File.write(fmt_base_h, patched)",
+          "        puts 'Patched fmt/base.h: FMT_USE_CONSTEVAL=0 for Xcode 26'",
+          "      end",
+          "    end",
+        ].join("\n");
+
+        // Insertar al inicio del bloque post_install
+        contents = contents.replace(
+          /(\n  post_install do \|installer\|\n)/,
+          `$1${fmtFix}\n`
         );
       }
 
