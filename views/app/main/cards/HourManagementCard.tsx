@@ -68,6 +68,34 @@ const HourManagementCard = () => {
     setLoading(false);
   };
 
+  const onPressEndButton = async () => {
+    setLoading(true);
+
+    if (user?.userInformation.hourTrackingConfiguration?.enableGPS) {
+      const location = await Location.getCurrentPositionAsync({});
+
+      const dis = getDistance(
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+        {
+          latitude: contractorData?.lat || 0,
+          longitude: contractorData?.lng || 0,
+        }
+      );
+      if (dis > 25) {
+        Alert.alert(
+          "No estas cerca de la instalación para validar correctamente fin de turno"
+        );
+        setLoading(false);
+        return;
+      }
+    }
+
+    endHour();
+  };
+
   const validateQrCode = async (qrCode: string) => {
     if (contractorData?.qrCode === qrCode) {
       startHour();
@@ -183,9 +211,10 @@ const HourManagementCard = () => {
         </Text>
         {isShiftStarted ? (
           <ButtonDS
-            text="Finalizar Turno"
+            text={loading ? "Finalizando Turno..." : "Finalizar Turno"}
             className="p-3 font-bold"
-            onPress={endHour}
+            onPress={onPressEndButton}
+            disabled={loading || contractorLoading || hourManagementLoading}
           />
         ) : user?.userInformation.hourTrackingConfiguration?.enableNFC ? (
           <NFCButton
